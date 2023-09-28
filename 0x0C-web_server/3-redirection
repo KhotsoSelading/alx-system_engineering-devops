@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs nginx server with a redirect
+# Installs nginx server with a redirect page
 apt-get update
 apt-get -y install nginx
 ufw allow 'Nginx HTTP'
