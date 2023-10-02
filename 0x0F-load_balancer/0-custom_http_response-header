@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Script to add a custom Nginx response header
+apt-get update
+apt-get -y install nginx
+ufw allow 'Nginx HTTP'
+echo "Hello World!" > /var/www/html/index.html
+echo "Ceci n'est pas une page" > /var/www/html/error_404.html
+sudo sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/ permanent;' /etc/nginx/sites-available/default
+sudo sed -i '/listen 80 default_server/a error_page 404 /error_404.html;' /etc/nginx/sites-available/default
+sed -i "/listen 80 default_server/a add_header X-Served-By \"$HOSTNAME\";" /etc/nginx/sites-available/default
+service nginx start
