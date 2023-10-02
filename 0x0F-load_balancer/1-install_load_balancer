@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# A script to install and configure the HAproxy on my server
+apt-get update
+apt-get -y install haproxy
+echo "ENABLED=1" | tee -a /etc/default/haproxy
+echo "
+frontend  ravibling-front
+        bind *:80
+        mode http
+        default_backend ravibling-back
+backend ravibling-back
+        balance roundrobin
+        server web-01 100.26.162.11:80 check
+        server web-02 54.144.132.140:80 check" >> /etc/haproxy/haproxy.cfg
+
+service haproxy restart
