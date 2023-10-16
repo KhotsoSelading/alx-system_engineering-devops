@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Configure ufw so that it blocks all incoming traffic
+
+sudo apt-get -y update && sudo apt-get -y install ufw
+sudo ufw disable
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo service ufw stop
+sudo ufw allow 22/tcp 443/tcp 80/tcp
+sudo ufw enable
