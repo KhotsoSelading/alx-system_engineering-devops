@@ -1,10 +1,32 @@
 #!/usr/bin/env bash
-# Configure ufw so that it blocks all incoming traffic
+# Check if the script is run with root (sudo) privileges
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run this script with root (sudo) privileges."
+  exit 1
+fi
 
-sudo apt-get -y update && sudo apt-get -y install ufw
-sudo ufw disable
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo service ufw stop
-sudo ufw allow 22/tcp 443/tcp 80/tcp
-sudo ufw enable
+# Update package lists and install ufw
+apt update
+apt install -y ufw
+
+# Enable ufw and set default policies
+ufw --force enable
+ufw default deny incoming
+ufw default allow outgoing
+
+# Allow specific ports (22, 80, 443)
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+
+# Reload ufw to apply rules
+ufw reload
+
+# Display ufw status
+ufw status
+
+echo "UFW setup is complete. Allowing SSH (22), HTTP (80), and HTTPS (443) traffic."
+
+# Exit the script
+exit 0
+
