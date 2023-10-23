@@ -10,14 +10,14 @@ base_url = 'https://jsonplaceholder.typicode.com/'
 
 def do_requestUser():
     """Performs request of user"""
-    response = requests.get(base_url + 'users/')
-    if response.status_code != 200:
-        return print('Error: status_code:', response.status_code)
-    users = response.json()
-    response = requests.get(base_url + 'todos/')
-    if response.status_code != 200:
-        return print('Error: status_code:', response.status_code)
-    todos = response.json()
+    the_reply = requests.get(base_url + 'users/')
+    if the_reply.status_code != 200:
+        return print('Error: status_code:', the_reply.status_code)
+    users = the_reply.json()
+    the_reply = requests.get(base_url + 'todos/')
+    if the_reply.status_code != 200:
+        return print('Error: status_code:', the_reply.status_code)
+    todos = the_reply.json()
     data = {}
     for user in users:
         user_todos = [todo for todo in todos
