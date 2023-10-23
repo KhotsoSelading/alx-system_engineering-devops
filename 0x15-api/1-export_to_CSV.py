@@ -2,8 +2,8 @@
 """Reads the to-do list from api for id passed"""
 
 import csv
-import sys
 import requests
+import sys
 
 
 base_url = 'https://jsonplaceholder.typicode.com/'

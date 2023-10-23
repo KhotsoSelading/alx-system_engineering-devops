@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """Reads the to-do list from api for employee id passed"""
 
-import sys
 import requests
+import sys
 
 
 base_url = 'https://jsonplaceholder.typicode.com/'

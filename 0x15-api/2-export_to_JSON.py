@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """Reads the to-do list from api for id passed and turns into json file"""
 
-import sys
 import json
 import requests
+import sys
 
 
 base_url = 'https://jsonplaceholder.typicode.com/'
