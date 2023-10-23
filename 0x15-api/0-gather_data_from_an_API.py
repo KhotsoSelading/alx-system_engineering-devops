@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Reads the to-do list from api for employee id passed"""
+
 import requests
 import sys
 from urllib.parse import urljoin
