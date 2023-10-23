@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-"""Reads the to-do list from api for employee id passed"""
+"""Reads the to-do list from api for id passed"""
 
+import csv
 import sys
 import requests
 
@@ -10,7 +11,7 @@ base_url = 'https://jsonplaceholder.typicode.com/'
 
 def do_requestUser():
     """Performs request of user"""
-    if len(sys.argv) < 2:
+    if not len(sys.argv):
         return print('USAGE:', __file__, '<employee id>')
     eid = sys.argv[1]
     try:
@@ -30,10 +31,14 @@ def do_requestUser():
     user_todos = [todo for todo in todos
                   if todo.get('userId') == user.get('id')]
     completed = [todo for todo in user_todos if todo.get('completed')]
-    print('Employee', user.get('name'),
-          'is done with tasks({}/{}):'.
-          format(len(completed), len(user_todos)))
-    [print('\t', todo.get('title')) for todo in completed]
+
+    with open(eid + '.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile, lineterminator='\n',
+                            quoting=csv.QUOTE_ALL)
+        [writer.writerow(['{}'.format(field) for field in
+                          (todo.get('userId'), user.get('username'),
+                           todo.get('completed'), todo.get('title'))])
+         for todo in user_todos]
 
 
 if __name__ == '__main__':

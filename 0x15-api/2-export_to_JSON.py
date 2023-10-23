@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-"""Reads the to-do list from api for employee id passed"""
+"""Reads the to-do list from api for id passed and turns into json file"""
 
 import sys
+import json
 import requests
 
 
@@ -23,6 +24,7 @@ def do_requestUser():
     elif the_reply.status_code != 200:
         return print('Error: status_code:', the_reply.status_code)
     user = the_reply.json()
+
     the_reply = requests.get(base_url + 'todos/')
     if the_reply.status_code != 200:
         return print('Error: status_code:', the_reply.status_code)
@@ -30,10 +32,14 @@ def do_requestUser():
     user_todos = [todo for todo in todos
                   if todo.get('userId') == user.get('id')]
     completed = [todo for todo in user_todos if todo.get('completed')]
-    print('Employee', user.get('name'),
-          'is done with tasks({}/{}):'.
-          format(len(completed), len(user_todos)))
-    [print('\t', todo.get('title')) for todo in completed]
+
+    user_todos = [{'task': todo.get('title'),
+                   'completed': todo.get('completed'),
+                   'username': user.get('username')}
+                  for todo in user_todos]
+    data = {eid: user_todos}
+    with open(eid + '.json', 'w') as file:
+        json.dump(data, file)
 
 
 if __name__ == '__main__':
