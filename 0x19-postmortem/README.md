@@ -1,6 +1,6 @@
 <h1 align="center">POSTMORTEM</h1>
 
-<p align="center"><img src="./imgs/printf.png" width="500"></p>
+<p align="center"><img src="./images/printf.png" width="500"></p>
 
 A software postmortem is a structured analysis conducted after significant software incidents, such as outages or security breaches, with the goal of understanding what went wrong, learning from the experience, and preventing similar incidents in the future. It borrows the concept from the medical field, where autopsies are performed to understand the causes of a patient's death.
 
