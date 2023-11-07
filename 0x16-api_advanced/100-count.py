@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """Get ALL hot posts"""
-import pprint
 import re
 import requests
 
