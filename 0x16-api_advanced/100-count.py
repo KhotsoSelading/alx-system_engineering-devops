@@ -1,43 +1,55 @@
 #!/usr/bin/python3
-"""Function to count words in all hot posts of a given Reddit subreddit."""
+"""Get ALL hot posts"""
+import pprint
+import re
 import requests
 
+BASE_URL = 'http://reddit.com/r/{}/hot.json'
 
-def count_words(subreddit, word_list, instances={}, after=None, count=0):
-    """Prints counts of given words found in hot posts of a given subreddit."""
-    if after is None:
-        if len(instances) == 0:
-            print("")
-            return
-        instances = sorted(instances.items(), key=lambda kv: (-kv[1],
-                                                              kv[0].lower()))
-        [print("{}: {}".format(k, v)) for k, v in instances]
-        return
 
-    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
-    headers = {"User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"}
-    params = {"after": after, "count": count, "limit": 100}
+def count_words(subreddit, word_list, hot_list=[], after=None):
+    """Get ALL hot posts"""
+    headers = {'User-agent': 'Unix:0-subs:v1'}
+    params = {'limit': 100}
 
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
+    if isinstance(after, str):
+        if after != "STOP":
+            params['after'] = after
+        else:
+            return print_results(word_list, hot_list)
 
-    try:
-        results = response.json()
-        if response.status_code == 404:
-            raise Exception
-    except Exception:
-        print("")
-        return
+    response = requests.get(BASE_URL.format(subreddit),
+                            headers=headers,
+                            params=params)
 
-    results = results.get("data")
-    after = results.get("after")
-    count += results.get("dist")
+    if response.status_code != 200:
+        return None
 
-    for c in results.get("children"):
-        title = c.get("data").get("title").lower().split()
+    data = response.json().get('data', {})
+    after = data.get('after', 'STOP')
+
+    if not after:
+        after = "STOP"
+
+    hot_list = hot_list + [post.get('data', {}).get('title')
+                           for post in data.get('children', [])]
+    return count_words(subreddit, word_list, hot_list, after)
+
+
+def print_results(word_list, hot_list):
+    '''Prints request results'''
+    count = {}
+
+    for word in word_list:
+        count[word] = 0
+
+    for title in hot_list:
         for word in word_list:
-            times = title.count(word.lower())
-            if times > 0:
-                instances[word] = instances.get(word, 0) + times
+            count[word] = count[word] +\
+             len(re.findall(r'(?:^| ){}(?:$| )'.format(word), title, re.I))
 
-    count_words(subreddit, word_list, instances, after, count)
+    count = {k: v for k, v in count.items() if v > 0}
+    words = sorted(list(count.keys()))
+
+    for word in sorted(words, reverse=True, key=lambda k: count[k]):
+        print("{}: {}".format(word, count[word]))
